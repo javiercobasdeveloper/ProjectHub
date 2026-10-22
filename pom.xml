@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Este archivo es el pom.xml de Maven.
+  Es la receta del proyecto: qué es, qué versión de Java usa,
+  qué librerías necesita y cómo debe compilarse o probarse.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <!-- Spring Boot gestiona versiones compatibles para las dependencias principales. -->
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>4.1.1</version>
+    <relativePath/>
+  </parent>
+
+    <!--
+      Versión del formato del POM de Maven.
+      En la práctica, esto indica la estructura del archivo que Maven espera.
+    -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+      Coordenadas del proyecto: identifican la aplicación dentro del repositorio Maven.
+      groupId = nombre del grupo o empresa/paquete base.
+      artifactId = nombre del proyecto.
+      version = versión actual del artefacto.
+      name = nombre humano legible.
+    -->
+    <groupId>com.projecthub</groupId>
+    <artifactId>projecthub</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <name>ProjectHub</name>
+
+    <!--
+      Propiedades reutilizables dentro del proyecto.
+      Aquí definimos variables que luego usaremos en otros bloques para no repetir valores.
+    -->
+    <properties>
+        <!-- Java 21: la versión del lenguaje que usaremos para compilar. -->
+        <maven.compiler.release>21</maven.compiler.release>
+        <!-- La codificación del texto del proyecto: UTF-8 para evitar problemas con caracteres. -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!--
+      Dependencias del proyecto.
+      Son librerías externas que Maven descargará y que el proyecto necesita para compilar o testear.
+    -->
+    <dependencies>
+        <!-- Spring MVC aporta los controladores y endpoints HTTP de la aplicación. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <!-- Spring Data JPA conecta el modelo persistente con operaciones de repositorio. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!-- Activa la validación declarativa de datos en las peticiones HTTP. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- Añade autenticación HTTP Basic y autorización de rutas mediante Spring Security. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- Genera OpenAPI desde Spring MVC y sirve Swagger UI para explorar la API. -->
+        <dependency>
+          <groupId>org.springdoc</groupId>
+          <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+          <version>3.1.1</version>
+        </dependency>
+        <!-- PostgreSQL es la base de datos usada al ejecutar la aplicación normalmente. -->
+        <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <scope>runtime</scope>
+        </dependency>
+        <!-- El starter conecta Flyway con el arranque y la autoconfiguración de Spring Boot. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-flyway</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-database-postgresql</artifactId>
+          <scope>runtime</scope>
+        </dependency>
+        <!-- Incluye JUnit, Spring Test y MockMvc para probar la API sin abrir un servidor. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <!-- Base de datos ligera exclusiva para las pruebas automatizadas. -->
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <!-- Permite enviar credenciales HTTP Basic de prueba en las peticiones MockMvc. -->
+        <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <!-- Añade las herramientas de prueba específicas de Spring MVC en Spring Boot 4. -->
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-webmvc-test</artifactId>
+          <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!--
+      Configuración de compilación y plugins.
+      Los plugins añaden tareas concretas a Maven, como compilar Java o ejecutar tests.
+    -->
+    <build>
+        <plugins>
+            <!--
+              maven-compiler-plugin:
+              instruye a Maven a compilar los archivos Java usando la versión indicada.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+            </plugin>
+
+            <!--
+              maven-surefire-plugin:
+              ejecuta las pruebas unitarias de JUnit cuando haces mvn test.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+            </plugin>
+
+            <!-- Permite empaquetar y ejecutar la aplicación Spring Boot desde Maven. -->
+            <plugin>
+              <groupId>org.springframework.boot</groupId>
+              <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
