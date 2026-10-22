@@ -16,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 // Importa el repositorio para limpiar los datos entre casos de prueba.
 import com.projecthub.project.persistence.ProjectRepository;
+import com.projecthub.task.persistence.TaskRepository;
 import com.projecthub.user.GlobalRole;
 import com.projecthub.user.persistence.UserEntity;
 import com.projecthub.user.persistence.UserRepository;
@@ -44,23 +45,29 @@ class ProjectControllerTest {
     @Autowired
     private ProjectRepository projectRepository;
 
-        // Repositorio para preparar las cuentas usadas por cada escenario de autorización.
-        @Autowired
-        private UserRepository userRepository;
+    // Repositorio para eliminar tareas antes que los proyectos a los que pertenecen.
+    @Autowired
+    private TaskRepository taskRepository;
 
-        // Codificador real para que las cuentas de prueba puedan autenticarse por HTTP Basic.
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+    // Repositorio para preparar las cuentas usadas por cada escenario de autorización.
+    @Autowired
+    private UserRepository userRepository;
+
+    // Codificador real para que las cuentas de prueba puedan autenticarse por HTTP Basic.
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Elimina datos persistidos para que el resultado de una prueba no afecte a otra.
     @BeforeEach
-        void clearProjects() {
-        // Borra las filas antes de probar un nuevo escenario HTTP.
+    void clearProjects() {
+        // Borra primero las tareas que referencian los proyectos.
+        taskRepository.deleteAll();
+        // Borra los proyectos antes de eliminar sus propietarios.
         projectRepository.deleteAll();
-                // Elimina las cuentas anteriores una vez borradas las referencias de proyectos.
-                userRepository.deleteAll();
-                // Crea el propietario que usarán las peticiones autenticadas de esta prueba.
-                userRepository.save(new UserEntity("owner@example.com", passwordEncoder.encode("password123"), GlobalRole.MEMBER));
+        // Elimina las cuentas anteriores una vez borradas sus referencias.
+        userRepository.deleteAll();
+        // Crea el propietario que usarán las peticiones autenticadas de esta prueba.
+        userRepository.save(new UserEntity("owner@example.com", passwordEncoder.encode("password123"), GlobalRole.MEMBER));
     }
 
     // Comprueba el flujo de creación, lectura, listado y archivado de un proyecto.
